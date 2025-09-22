@@ -36,7 +36,7 @@ export default function App() {
                 <NavigationContainer>
                     <SafeAreaView style={{ flex: 1 }} edges={["top", "left", "right"]}>
                         <Stack.Navigator
-                            initialRouteName="LoadingScreen"
+                            initialRouteName="EducationScreen"
                             screenOptions={{ headerShown:false}}
                         >
                             <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
