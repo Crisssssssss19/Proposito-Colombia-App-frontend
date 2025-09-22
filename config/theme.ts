@@ -2,7 +2,7 @@
 export const lightTheme = {
     colors: {
         background: {
-            primary: '#FFFFFF',   // Blanco Puro
+            primary: '#FFFmFFF',   // Blanco Puro
             secondary: '#F8F9FA', // Gris Muy Claro
             card: '#FFFFFF',      // si quieres diferenciar tarjetas usa un gris suave
         },

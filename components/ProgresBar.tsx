@@ -3,6 +3,7 @@ import { View, StyleSheet, Animated, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import {useTheme} from "../context/ThemeContext";
 
 type RootStackParamList = {
     AccessScreen: undefined;
@@ -18,6 +19,7 @@ export default function ProgresBar({ value }: ProgressBarProps) {
     const [progress] = useState(new Animated.Value(0));
     const navigation = useNavigation<NavigationProp>();
     const hasRedirected = useRef(false); // ✅ flag para evitar bucle
+    const  theme = useTheme()
 
     useEffect(() => {
         if (typeof value === "number") {
@@ -36,7 +38,7 @@ export default function ProgresBar({ value }: ProgressBarProps) {
             // Si no hay value, podemos animar hasta 100% antes de redirigir
             Animated.timing(progress, {
                 toValue: 1,
-                duration: 5000,
+                duration: 4000,
                 useNativeDriver: false,
             }).start(({ finished }) => {
                 if (finished && !hasRedirected.current) {
@@ -53,7 +55,7 @@ export default function ProgresBar({ value }: ProgressBarProps) {
     });
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container ,{ backgroundColor: theme.theme.colors.background.primary}]}>
             <View style={styles.row}>
                 <View style={styles.progressBar}>
                     <View style={styles.track} />
@@ -77,7 +79,6 @@ export default function ProgresBar({ value }: ProgressBarProps) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#fff",
         justifyContent: "center",
         alignItems: "center",
         padding: 20,

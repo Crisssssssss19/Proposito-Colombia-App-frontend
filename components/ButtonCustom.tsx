@@ -23,14 +23,12 @@ export default function ButtonCustom({
             style={({ pressed }) => [
                 {
                     backgroundColor: theme.colors.primary.DEFAULT,
-                    paddingVertical: 12,
-                    paddingHorizontal: 20,
                     height: 50,
-                    width: 280,
-                    borderRadius: 10,
-                    alignItems: "center",
+                    borderRadius: 8,
+                    marginVertical:10,
                     justifyContent: "center",
-                    transform: [{ scale: pressed ? 1.15 : 1 }], // <-- aquí se hace más grande
+                    alignItems: "center",
+                    transform: [{ scale: pressed ? 1.15 : 1 }],
                 },
                 style,
             ]}
