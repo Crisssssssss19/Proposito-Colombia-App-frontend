@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useTheme } from "../context/ThemeContext";
@@ -69,6 +69,9 @@ export default function EducationScreen() {
     const [showUniversityModal, setShowUniversityModal] = useState(false);
     const [showCityModal, setCityModal] = useState(false);
 
+    // Estado para mostrar solo especializaciones
+    const [isTypingSpecialization, setIsTypingSpecialization] = useState(false);
+
     // Handlers
     const handleGoBack = () => navigation.goBack();
     const handleContinue = () => navigation.navigate("BiographyScreen");
@@ -78,6 +81,7 @@ export default function EducationScreen() {
             setSpecializations([...specializations, newSpecialization.trim()]);
             setNewSpecialization("");
         }
+        setIsTypingSpecialization(false);
     };
 
     const removeSpecialization = (index: number) => {
@@ -85,113 +89,127 @@ export default function EducationScreen() {
     };
 
     return (
-        <FormContainer
-            onGoBack={handleGoBack}
-            progress={33}
-            title="Tu formación y ubicación"
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-            {/* Carrera Profesional */}
-            <FormField
-                label="Carrera profesional"
-                icon="school-outline"
-                required
+            <FormContainer
+                onGoBack={handleGoBack}
+                progress={33}
+                title="Tu formación y ubicación"
             >
-                <CustomDropdown
-                    placeholder="Ingeniería de Sistemas"
-                    value={selectedCareer}
-                    onPress={() => setShowCareerModal(true)}
-                />
-            </FormField>
+                {/* Mostrar todo el formulario si NO está escribiendo especializaciones */}
+                {!isTypingSpecialization && (
+                    <>
+                        {/* Carrera Profesional */}
+                        <FormField
+                            label="Carrera profesional"
+                            icon="school-outline"
+                            required
+                        >
+                            <CustomDropdown
+                                placeholder="Ingeniería de Sistemas"
+                                value={selectedCareer}
+                                onPress={() => setShowCareerModal(true)}
+                            />
+                        </FormField>
 
-            {/* Universidad */}
-            <FormField
-                label="Universidad (opcional)"
-                icon="library-outline"
-            >
-                <CustomDropdown
-                    placeholder="Universidad Nacional de Colombia"
-                    value={selectedUniversity}
-                    onPress={() => setShowUniversityModal(true)}
-                />
-            </FormField>
+                        {/* Universidad */}
+                        <FormField
+                            label="Universidad (opcional)"
+                            icon="library-outline"
+                        >
+                            <CustomDropdown
+                                placeholder="Universidad Nacional de Colombia"
+                                value={selectedUniversity}
+                                onPress={() => setShowUniversityModal(true)}
+                            />
+                        </FormField>
 
-            {/* Ciudad */}
-            <FormField
-                label="Ciudad, País"
-                icon="location-outline"
-                required
-            >
-                <CustomDropdown
-                    placeholder="Bogotá, Colombia"
-                    value={selectedCity}
-                    onPress={() => setCityModal(true)}
-                />
-            </FormField>
+                        {/* Ciudad */}
+                        <FormField
+                            label="Ciudad, País"
+                            icon="location-outline"
+                            required
+                        >
+                            <CustomDropdown
+                                placeholder="Bogotá, Colombia"
+                                value={selectedCity}
+                                onPress={() => setCityModal(true)}
+                            />
+                        </FormField>
+                    </>
+                )}
 
-            {/* Especializaciones */}
-            <FormField label="Especializaciones (opcional)">
-                <View style={styles.specializationInput}>
-                    <TextInput
-                        style={[
-                            styles.input,
-                            {
-                                color: theme.colors.text.primary,
-                                borderColor: theme.colors.border.DEFAULT,
-                                backgroundColor: theme.colors.background.secondary,
-                            }
-                        ]}
-                        placeholder="Desarrollo Web, ML..."
-                        placeholderTextColor={theme.colors.text.secondary}
-                        value={newSpecialization}
-                        onChangeText={setNewSpecialization}
+                {/* Especializaciones */}
+                <FormField label="Especializaciones (opcional)">
+                    <View style={styles.specializationInput}>
+                        <TextInput
+                            style={[
+                                styles.input,
+                                {
+                                    color: theme.colors.text.primary,
+                                    borderColor: theme.colors.border.DEFAULT,
+                                    backgroundColor: theme.colors.background.secondary,
+                                }
+                            ]}
+                            placeholder="Desarrollo Web, ML..."
+                            placeholderTextColor={theme.colors.text.secondary}
+                            value={newSpecialization}
+                            onChangeText={setNewSpecialization}
+                            onFocus={() => setIsTypingSpecialization(true)}
+                            //onBlur={() => setIsTypingSpecialization(false)}
+                        />
+                        <AddButton
+                            text=""
+                            onPress={addSpecialization}
+                            style={styles.squareButton}
+                            iconSize={20}
+                        />
+                    </View>
+
+                    <TagsList
+                        tags={specializations}
+                        onRemove={removeSpecialization}
                     />
-                    <AddButton
-                        text=""
-                        onPress={addSpecialization}
-                        style={styles.squareButton}
-                        iconSize={20}
-                    />
-                </View>
+                </FormField>
 
-                <TagsList
-                    tags={specializations}
-                    onRemove={removeSpecialization}
+                {/* Botón Continuar (oculto mientras escribe especialización) */}
+                {!isTypingSpecialization && (
+                    <ButtonCustom onPress={handleContinue}>
+                        Continuar
+                    </ButtonCustom>
+                )}
+
+                {/* Modales */}
+                <ModalSelector
+                    visible={showCareerModal}
+                    onClose={() => setShowCareerModal(false)}
+                    title="Selecciona tu carrera"
+                    data={CAREERS}
+                    selectedValue={selectedCareer}
+                    onSelect={setSelectedCareer}
                 />
-            </FormField>
 
-            {/* Botón Continuar */}
-            <ButtonCustom onPress={handleContinue}>
-                Continuar
-            </ButtonCustom>
+                <ModalSelector
+                    visible={showUniversityModal}
+                    onClose={() => setShowUniversityModal(false)}
+                    title="Selecciona tu universidad"
+                    data={UNIVERSITIES}
+                    selectedValue={selectedUniversity}
+                    onSelect={setSelectedUniversity}
+                />
 
-            {/* Modales */}
-            <ModalSelector
-                visible={showCareerModal}
-                onClose={() => setShowCareerModal(false)}
-                title="Selecciona tu carrera"
-                data={CAREERS}
-                selectedValue={selectedCareer}
-                onSelect={setSelectedCareer}
-            />
-
-            <ModalSelector
-                visible={showUniversityModal}
-                onClose={() => setShowUniversityModal(false)}
-                title="Selecciona tu universidad"
-                data={UNIVERSITIES}
-                selectedValue={selectedUniversity}
-                onSelect={setSelectedUniversity}
-            />
-
-            <ModalSelector
-                visible={showCityModal}
-                onClose={() => setCityModal(false)}
-                title="Selecciona tu ciudad"
-                data={CITIES}
-                selectedValue={selectedCity}
-                onSelect={setSelectedCity}
-            />
-        </FormContainer>
+                <ModalSelector
+                    visible={showCityModal}
+                    onClose={() => setCityModal(false)}
+                    title="Selecciona tu ciudad"
+                    data={CITIES}
+                    selectedValue={selectedCity}
+                    onSelect={setSelectedCity}
+                />
+            </FormContainer>
+        </KeyboardAvoidingView>
     );
 }
 

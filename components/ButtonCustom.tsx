@@ -25,7 +25,7 @@ export default function ButtonCustom({
                     backgroundColor: theme.colors.primary.DEFAULT,
                     height: 50,
                     borderRadius: 8,
-                    marginVertical:10,
+                    marginVertical:8,
                     justifyContent: "center",
                     alignItems: "center",
                     transform: [{ scale: pressed ? 1.15 : 1 }],
@@ -39,7 +39,7 @@ export default function ButtonCustom({
                     {
                         fontSize: 16,
                         fontWeight: "600",
-                        color: theme.colors.text.primary,
+                        color: theme.colors.background.primary,
                     },
                     textStyle,
                 ]}

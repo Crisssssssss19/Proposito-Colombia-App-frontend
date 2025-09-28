@@ -240,11 +240,6 @@ export default function LoginScreen() {
                     </View>
                 </View>
             </View>
-
-            {/* Footer */}
-            <View style={styles.footerSection}>
-                <Footer />
-            </View>
         </View>
     );
 }

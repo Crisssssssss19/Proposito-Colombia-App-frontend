@@ -96,7 +96,6 @@ export default function UserTypeScreen() {
                         Propósitos Colombia
                     </Text>
                 </View>
-                <Footer />
             </View>
         </View>
     );

@@ -46,7 +46,7 @@ export default function FormContainer({
                 <ScrollView
                     style={styles.formSection}
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 20 }}
+                    contentContainerStyle={{ paddingBottom: 40 }}
                 >
                     {children}
                 </ScrollView>
@@ -72,8 +72,6 @@ const styles = StyleSheet.create({
     },
     logoSection: {
         alignItems: "center",
-        paddingTop: 20,
-        paddingBottom: 20,
     },
     formSection: {
         flex: 1,
