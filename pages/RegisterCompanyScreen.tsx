@@ -348,10 +348,7 @@ export default function RegisterCompanyScreen() {
                 </View>
             </ScrollView>
 
-            {/* Footer */}
-            <View style={styles.footerSection}>
-                <Footer />
-            </View>
+
         </View>
     );
 }

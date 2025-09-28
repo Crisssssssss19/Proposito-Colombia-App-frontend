@@ -75,14 +75,6 @@ export default function AccessScreen() {
                             </ButtonCustom>
                         </View>
                 </View>
-
-
-                <View style={{ alignItems: "center"}}>
-                    <View style={{marginBottom:20}}>
-                        <InfoSection/>
-                    </View>
-                        <Footer/>
-                </View>
             </View>
         </View>
     );

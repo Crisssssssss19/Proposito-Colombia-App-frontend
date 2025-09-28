@@ -70,9 +70,6 @@ export default function PortfolioScreen() {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
-            {/* Header */}
-            <PropositosHeader />
-
             {/* Progress Header */}
             <View style={styles.progressHeader}>
                 <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
@@ -216,11 +213,6 @@ export default function PortfolioScreen() {
                         Continuar
                     </Text>
                 </TouchableOpacity>
-
-                {/* Footer */}
-                <View style={styles.footerSection}>
-                    <Footer />
-                </View>
             </View>
         </View>
     );

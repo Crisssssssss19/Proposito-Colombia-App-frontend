@@ -16,6 +16,7 @@ import ProfilePhotoScreen from "./pages/ProfilePhotoScreen";
 import EducationScreen from "./pages/EducationScreen";
 import BiographyScreen from "./pages/BiographyScreen";
 import CVScreen from "./pages/CVScreen";
+import PortfolioScreen from "./pages/PortfolioScreen";
 
 // 👇 Actualizar tipos para incluir todas las pantallas
 export type RootStackParamList = {
@@ -51,6 +52,7 @@ export default function App() {
                             <Stack.Screen name="EducationScreen" component={EducationScreen}/>
                             <Stack.Screen name="BiographyScreen" component={BiographyScreen}/>
                             <Stack.Screen name='CVScreen' component={CVScreen}/>
+                            <Stack.Screen name="PortfolioScreen" component={PortfolioScreen}/>
                         </Stack.Navigator>
                         <StatusBar style="auto" />
                     </SafeAreaView>
