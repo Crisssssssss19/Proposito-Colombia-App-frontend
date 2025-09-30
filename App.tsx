@@ -17,6 +17,11 @@ import EducationScreen from "./pages/EducationScreen";
 import BiographyScreen from "./pages/BiographyScreen";
 import CVScreen from "./pages/CVScreen";
 import PortfolioScreen from "./pages/PortfolioScreen";
+import VacantesScreen from "./pages/VacantesScreen";
+import PostulacionesScreen from "./pages/PostulacionesScreen";
+import ExplorarScreen from "./pages/ExplorarScreen";
+import BottomTabNavigator from "./components/BottomTabNavigator";
+import MatchesScreen from "./pages/MatchesScreen";
 
 // 👇 Actualizar tipos para incluir todas las pantallas
 export type RootStackParamList = {
@@ -37,7 +42,7 @@ export default function App() {
                 <NavigationContainer>
                     <SafeAreaView style={{ flex: 1 }} edges={["top", "left", "right"]}>
                         <Stack.Navigator
-                            initialRouteName="LoadingScreen"
+                            initialRouteName="BottomTabNavigator"
                             screenOptions={{ headerShown:false}}
                         >
                             <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
@@ -53,6 +58,11 @@ export default function App() {
                             <Stack.Screen name="BiographyScreen" component={BiographyScreen}/>
                             <Stack.Screen name='CVScreen' component={CVScreen}/>
                             <Stack.Screen name="PortfolioScreen" component={PortfolioScreen}/>
+                            <Stack.Screen name="VacantesScreen" component={VacantesScreen}/>
+                            <Stack.Screen name="PostulacionesScreen" component={PostulacionesScreen}/>
+                            <Stack.Screen name="ExplorarScreen" component={ExplorarScreen}/>
+                            <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator}/>
+                            <Stack.Screen name="MatchesScreen" component={MatchesScreen}/>
                         </Stack.Navigator>
                         <StatusBar style="auto" />
                     </SafeAreaView>

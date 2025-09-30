@@ -14,9 +14,11 @@ import { Ionicons } from "@expo/vector-icons";
 import InfoSection from "../components/InfoSection";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
+import VacantesScreen from "./VacantesScreen";
 
 type RootStackParamList = {
     UserTypeScreen: undefined;
+    VacantesScreen: undefined;
 };
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -27,7 +29,7 @@ export default function LoginScreen() {
     const [showPassword, setShowPassword] = useState(false);
 
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [focusedField, setFocusedField] = useState<string | null>("email"); // Start with email focused
 
     const navigation = useNavigation<NavigationProp>();
 
@@ -44,17 +46,18 @@ export default function LoginScreen() {
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
                 if (!value.trim()) error = "La contraseña es obligatoria";
                 else if (!passwordRegex.test(value))
-                error =
-                    "Luego se define el error";
+                    error = "Luego se define el error";
                 break;
         }
         setErrors((prev) => ({ ...prev, [field]: error }));
     };
 
     const isFormValid = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return (
             email.trim() !== "" &&
             password.trim() !== "" &&
+            emailRegex.test(email) &&
             Object.values(errors).every((err) => err === "")
         );
     };
@@ -65,7 +68,7 @@ export default function LoginScreen() {
 
         if (isFormValid()) {
             console.log("Login pressed", { email, password });
-            // lógica de login real aquí
+            navigation.navigate("VacantesScreen");
         }
     };
 
@@ -80,32 +83,24 @@ export default function LoginScreen() {
                 { backgroundColor: theme.colors.background.primary },
             ]}
         >
-            <View
-                style={{
-                    flex: 1,
-                    paddingHorizontal: 30,
-                    justifyContent: "space-between",
-                }}
-            >
-                {/* Logo */}
-                <View
-                    style={{
-                        alignItems: "center",
-                        paddingTop: 20,
-                        paddingBottom: 40,
-                    }}
-                >
+            <View style={styles.content}>
+                {/* Logo Section */}
+                <View style={styles.logoSection}>
                     <Golondrina />
                 </View>
 
-                {/* Form */}
+                {/* Form Section */}
                 <View style={styles.formSection}>
-                    {/* Email */}
+                    {/* Email Input */}
                     <View style={styles.inputContainer}>
                         <Ionicons
                             name="mail-outline"
                             size={20}
-                            color={theme.colors.text.secondary}
+                            color={
+                                focusedField === "email"
+                                    ? theme.colors.primary.DEFAULT
+                                    : theme.colors.text.secondary
+                            }
                             style={styles.inputIcon}
                         />
                         <TextInput
@@ -115,12 +110,12 @@ export default function LoginScreen() {
                                     color: theme.colors.text.primary,
                                     borderColor:
                                         focusedField === "email"
-                                            ? theme.colors.secondary.DEFAULT
+                                            ? theme.colors.primary.DEFAULT
                                             : errors.email
                                                 ? "#B91C1C"
                                                 : theme.colors.border.DEFAULT,
-                                    backgroundColor:
-                                    theme.colors.background.secondary,
+                                    backgroundColor: theme.colors.background.secondary,
+                                    borderWidth: focusedField === "email" ? 2 : 1,
                                 },
                             ]}
                             placeholder="Correo electrónico"
@@ -143,12 +138,16 @@ export default function LoginScreen() {
                         )}
                     </View>
 
-                    {/* Password */}
+                    {/* Password Input */}
                     <View style={styles.inputContainer}>
                         <Ionicons
                             name="lock-closed-outline"
                             size={20}
-                            color={theme.colors.text.secondary}
+                            color={
+                                focusedField === "password"
+                                    ? theme.colors.primary.DEFAULT
+                                    : theme.colors.text.secondary
+                            }
                             style={styles.inputIcon}
                         />
                         <TextInput
@@ -158,21 +157,25 @@ export default function LoginScreen() {
                                     color: theme.colors.text.primary,
                                     borderColor:
                                         focusedField === "password"
-                                            ? theme.colors.secondary.DEFAULT
+                                            ? theme.colors.primary.DEFAULT
                                             : errors.password
                                                 ? "#B91C1C"
                                                 : theme.colors.border.DEFAULT,
                                     backgroundColor: theme.colors.background.secondary,
+                                    borderWidth: focusedField === "password" ? 2 : 1,
                                 },
                             ]}
                             placeholder="Contraseña"
                             placeholderTextColor={theme.colors.text.secondary}
                             value={password}
                             onFocus={() => setFocusedField("password")}
-                            onBlur={() => setFocusedField(null)}
+                            onBlur={() => {
+                                setFocusedField(null);
+                                validateField("password", password);
+                            }}
                             onChangeText={(value) => {
                                 setPassword(value);
-                                validateField("password", value); // ✅ validación en tiempo real
+                                validateField("password", value);
                             }}
                             secureTextEntry={!showPassword}
                             autoComplete="password"
@@ -198,14 +201,13 @@ export default function LoginScreen() {
                         )}
                     </View>
 
-                    {/* Botón de Login */}
+                    {/* Login Button - Solid Blue */}
                     <TouchableOpacity
                         style={[
                             styles.loginButton,
                             {
-                                backgroundColor: isFormValid()
-                                    ? theme.colors.primary.DEFAULT
-                                    : "#9CA3AF",
+                                backgroundColor: theme.colors.primary.DEFAULT, // Always solid blue
+                                opacity: isFormValid() ? 1 : 0.6, // Use opacity instead of color change
                             },
                         ]}
                         onPress={handleLogin}
@@ -217,7 +219,7 @@ export default function LoginScreen() {
                         </Text>
                     </TouchableOpacity>
 
-                    {/* Register Link */}
+                    {/* Register Section */}
                     <View style={styles.registerSection}>
                         <Text
                             style={[
@@ -233,36 +235,81 @@ export default function LoginScreen() {
                             </Text>
                         </Pressable>
                     </View>
-
-                    {/* Info */}
-                    <View style={styles.infoSection}>
-                        <InfoSection />
-                    </View>
                 </View>
+
+                {/* Back Button */}
+                <View style={styles.backButtonContainer}>
+                    <TouchableOpacity
+                        style={[
+                            styles.backButton,
+                            {
+                                backgroundColor: theme.colors.background.secondary,
+                                borderColor: theme.colors.border.DEFAULT,
+                            }
+                        ]}
+                        onPress={() => navigation.goBack()}
+                        activeOpacity={0.7}
+                    >
+                        <Ionicons
+                            name="arrow-back"
+                            size={24}
+                            color={theme.colors.primary.DEFAULT}
+                        />
+                    </TouchableOpacity>
+                </View>
+                {/* Info Section */}
+                <View style={styles.infoSection}>
+                    <InfoSection />
+                </View>
+
+
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
+    container: {
+        flex: 1
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 30,
+        justifyContent: "space-between",
+    },
+    logoSection: {
+        alignItems: "center",
+        paddingTop: 60,
+        paddingBottom: 40,
+    },
     formSection: {
         flex: 1,
         justifyContent: "center",
-        paddingBottom: 80,
+        paddingBottom: 40,
     },
-    inputContainer: { position: "relative", marginBottom: 20 },
-    inputIcon: { position: "absolute", left: 15, top: 15, zIndex: 1 },
+    inputContainer: {
+        position: "relative",
+        marginBottom: 20
+    },
+    inputIcon: {
+        position: "absolute",
+        left: 15,
+        top: 15,
+        zIndex: 1
+    },
     input: {
         height: 50,
         paddingLeft: 45,
         paddingRight: 45,
-        borderWidth: 2,
         borderRadius: 8,
         fontSize: 16,
         fontFamily: "Montserrat_400Regular",
     },
-    eyeIcon: { position: "absolute", right: 15, top: 15 },
+    eyeIcon: {
+        position: "absolute",
+        right: 15,
+        top: 15
+    },
     errorMessage: {
         color: "#B91C1C",
         fontSize: 12,
@@ -275,8 +322,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 10,
+        marginTop: 20,
         marginBottom: 30,
+        // Remove any gradient styles - keep it solid
     },
     loginButtonText: {
         color: "white",
@@ -284,18 +332,44 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontFamily: "Montserrat_400Regular",
     },
-    registerSection: { alignItems: "center", marginBottom: 30 },
+    registerSection: {
+        alignItems: "center",
+        marginBottom: 20
+    },
     registerText: {
         fontSize: 14,
         fontFamily: "Montserrat_400Regular",
         marginBottom: 5,
+        textAlign: "center",
     },
     registerLink: {
         fontSize: 14,
         color: "#3B82F6",
         textDecorationLine: "underline",
         fontFamily: "Montserrat_400Regular",
+        textAlign: "center",
     },
-    infoSection: { alignItems: "center" },
-    footerSection: { alignItems: "center", paddingBottom: 20 },
+    infoSection: {
+        alignItems: "center",
+        paddingBottom: 20,
+    },
+    backButtonContainer: {
+        alignItems: "center",
+    },
+    backButton: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        borderWidth: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        elevation: 2, // Android shadow
+        shadowColor: "#000", // iOS shadow
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+    },
 });

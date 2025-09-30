@@ -16,8 +16,10 @@ import { useNavigation } from "@react-navigation/native";
 
 type RootStackParamList = {
     PhoneVerificationScreen: undefined;
+    UserTypeScreen: undefined;
 };
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 
 export default function RegisterAspirantScreen() {
     const { theme } = useTheme();
@@ -39,6 +41,9 @@ export default function RegisterAspirantScreen() {
     const updateField = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
         validateField(field, value);
+    };
+    const handleBackToAccess = () => {
+        navigation.navigate("UserTypeScreen");
     };
 
     const validateField = (field: string, value: string) => {
@@ -359,6 +364,27 @@ export default function RegisterAspirantScreen() {
                             </Text>
                         </Text>
 
+                        {/* Back Arrow Button */}
+                        <View style={styles.backArrowContainer}>
+                            <TouchableOpacity
+                                style={[
+                                    styles.backArrowButton,
+                                    {
+                                        backgroundColor: theme.colors.background.secondary,
+                                        borderColor: theme.colors.border.DEFAULT,
+                                    }
+                                ]}
+                                onPress={handleBackToAccess}
+                                activeOpacity={0.7}
+                            >
+                                <Ionicons
+                                    name="arrow-back"
+                                    size={24}
+                                    color={theme.colors.primary.DEFAULT}
+                                />
+                            </TouchableOpacity>
+                        </View>
+
                         {/* Register Button */}
                         <TouchableOpacity
                             style={[
@@ -399,7 +425,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         fontFamily: "Montserrat_400Regular",
     },
-    formSection: { paddingBottom: 30 },
+    formSection: { paddingBottom: 10 },
     input: {
         height: 50,
         paddingHorizontal: 15,
@@ -424,7 +450,7 @@ const styles = StyleSheet.create({
     termsText: {
         fontSize: 12,
         textAlign: "center",
-        marginVertical: 20,
+        marginVertical: 10,
         lineHeight: 18,
         fontFamily: "Montserrat_400Regular",
     },
@@ -446,5 +472,25 @@ const styles = StyleSheet.create({
         fontSize: 12,
         marginBottom: 5,
         fontFamily: "Montserrat_400Regular",
+    },
+    backArrowContainer: {
+        alignItems: "center",
+        margin: 10,
+    },
+    backArrowButton: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        borderWidth: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        elevation: 2, // Android shadow
+        shadowColor: "#000", // iOS shadow
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
     },
 });

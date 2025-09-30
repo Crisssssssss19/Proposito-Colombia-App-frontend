@@ -1,7 +1,18 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, StyleProp, ViewStyle, TextStyle, ImageStyle } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    StyleProp,
+    ViewStyle,
+    TextStyle,
+    ImageStyle,
+    Image,
+} from "react-native";
 import { useFonts, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
 import { useTheme } from "../context/ThemeContext";
+import MaskedView from "@react-native-masked-view/masked-view";
+import { LinearGradient } from "expo-linear-gradient";
 
 type GolondrinaProps = {
     title?: string;
@@ -10,7 +21,12 @@ type GolondrinaProps = {
     textStyle?: StyleProp<TextStyle>;
 };
 
-export default function Golondrina({ title, containerStyle, imageStyle, textStyle }: GolondrinaProps) {
+export default function Golondrina({
+                                       title,
+                                       containerStyle,
+                                       imageStyle,
+                                       textStyle,
+                                   }: GolondrinaProps) {
     const { theme } = useTheme();
 
     const [fontsLoaded] = useFonts({
@@ -21,11 +37,24 @@ export default function Golondrina({ title, containerStyle, imageStyle, textStyl
 
     return (
         <View style={[styles.imageContainer, containerStyle]}>
-            <Image
-                style={[styles.logo, imageStyle]}
-                source={require("../assets/SwallowLogoConLetras.png")}
-                resizeMode="contain"
-            />
+            {/* Aquí enmascaramos la imagen para aplicar gradiente */}
+            <MaskedView
+                style={{ width: 220, height: 220, marginBottom: 10 }}
+                maskElement={
+                    <Image
+                        source={require("../assets/logo_nombre.png")}
+                        style={[styles.logo, imageStyle]}
+                        resizeMode="contain"
+                    />
+                }
+            >
+                <LinearGradient
+                    colors={["#1E90FF", "#4B0082"]} // puedes cambiar colores aquí
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{ flex: 1 }}
+                />
+            </MaskedView>
 
             {title && (
                 <Text
@@ -51,7 +80,6 @@ const styles = StyleSheet.create({
     logo: {
         width: 220,
         height: 220,
-        marginBottom: 10,
     },
     title: {
         fontFamily: "Montserrat_400Regular",
