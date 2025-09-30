@@ -4,7 +4,7 @@
     "slug": "swallow-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/GolondrinaSinLetras.png",
+    "icon": "./assets/icono.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/GolondrinaSinLetras.png",
+        "foregroundImage": "./assets/icono.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -25,7 +25,7 @@
       "package": "com.cris_an.swallowapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icono.png"
     },
     "plugins": [
       "expo-font"
